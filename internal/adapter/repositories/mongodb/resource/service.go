@@ -91,3 +91,32 @@ func (r *MongoRepository) CheckItemAvailability(reference string, available stri
 	}
 	return err
 }
+
+func (r *MongoRepository) AddDocuments(reference string, documents []resource.DocumentInformation) error {
+	err := r.Client.C("items").Update(bson.M{"reference": reference}, bson.M{"$set": bson.M{
+		"document_info": documents,
+	}})
+	if err != nil {
+		log.Println("unable to update documents:", err.Error())
+	}
+	return err
+}
+
+func (r *MongoRepository) ValidateItem(reference string, validation resource.ValidationInformation) error {
+	err := r.Client.C("items").Update(bson.M{"reference": reference}, bson.M{"$set": bson.M{
+		"validation_info": validation,
+	}})
+	if err != nil {
+		log.Println("unable to update validation:", err.Error())
+	}
+	return err
+}
+
+func (r *MongoRepository) GetItemDetail(reference string) (*resource.Inventory, error) {
+	var item resource.Inventory
+	err := r.Client.C("items").Find(bson.M{"reference": reference}).One(&item)
+	if err != nil {
+		log.Println("unable to get data:", err.Error())
+	}
+	return &item, err
+}

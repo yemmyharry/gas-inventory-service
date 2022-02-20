@@ -101,3 +101,53 @@ func (s *Server) CheckItemAvailability() gin.HandlerFunc {
 		})
 	}
 }
+
+func (s *Server) AddDocument() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		i := &resource.Inventory{}
+		c.ShouldBindJSON(i)
+		reference := c.Param(strings.TrimSpace("reference"))
+		err := s.Inventory.AddDocuments(reference, i.DocumentInfo)
+		if err != nil {
+			c.JSON(500, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
+		c.JSON(200, gin.H{
+			"reference": reference,
+		})
+	}
+}
+
+func (s *Server) ValidateItem() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		i := &resource.Inventory{}
+		c.ShouldBindJSON(i)
+		reference := c.Param(strings.TrimSpace("reference"))
+		err := s.Inventory.ValidateItem(reference, i.ValidationInfo)
+		if err != nil {
+			c.JSON(500, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
+		c.JSON(200, gin.H{
+			"reference": reference,
+		})
+	}
+}
+
+func (s *Server) GetItemDetail() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		reference := c.Param(strings.TrimSpace("reference"))
+		i, err := s.Inventory.GetItemDetail(reference)
+		if err != nil {
+			c.JSON(500, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
+		c.JSON(200, i)
+	}
+}
