@@ -120,3 +120,51 @@ func (r *MongoRepository) GetItemDetail(reference string) (*resource.Inventory, 
 	}
 	return &item, err
 }
+
+func (r *MongoRepository) GetItemsByMultipleSearch(search string, page int) ([]resource.Inventory, error) {
+	var items []resource.Inventory
+	err := r.Client.C("items").Find(bson.M{"$or": []bson.M{
+		{"item_name": bson.RegEx{search, "i"}},
+		{"description": bson.RegEx{search, "i"}},
+		{"category_info.category_name": bson.RegEx{search, "i"}},
+		{"sub_category_info.sub_category_name": bson.RegEx{search, "i"}},
+		{"location_info.state_name": bson.RegEx{search, "i"}},
+		{"location_info.city_name": bson.RegEx{search, "i"}},
+	}}).Skip((page - 1) * 10).Sort("created_at").Limit(10).All(&items)
+	if err != nil {
+		log.Println("unable to get data:", err.Error())
+	}
+	return items, err
+}
+
+func (r *MongoRepository) GetItemsByOrganisationSearch(organisationReference string, search string, page int) ([]resource.Inventory, error) {
+	var items []resource.Inventory
+	err := r.Client.C("items").Find(bson.M{"organization_reference": organisationReference, "$or": []bson.M{
+		{"item_name": bson.RegEx{search, "i"}},
+		{"description": bson.RegEx{search, "i"}},
+		{"category_info.category_name": bson.RegEx{search, "i"}},
+		{"sub_category_info.sub_category_name": bson.RegEx{search, "i"}},
+		{"location_info.state_name": bson.RegEx{search, "i"}},
+		{"location_info.city_name": bson.RegEx{search, "i"}},
+	}}).Skip((page - 1) * 10).Sort("created_at").Limit(10).All(&items)
+	if err != nil {
+		log.Println("unable to get data:", err.Error())
+	}
+	return items, err
+}
+
+func (r *MongoRepository) GetItemsByCategoryAndOrganisationSearch(categoryReference string, organisationReference string, search string, page int) ([]resource.Inventory, error) {
+	var items []resource.Inventory
+	err := r.Client.C("items").Find(bson.M{"category_info.category_reference": categoryReference, "organization_reference": organisationReference, "$or": []bson.M{
+		{"item_name": bson.RegEx{search, "i"}},
+		{"description": bson.RegEx{search, "i"}},
+		{"category_info.category_name": bson.RegEx{search, "i"}},
+		{"sub_category_info.sub_category_name": bson.RegEx{search, "i"}},
+		{"location_info.state_name": bson.RegEx{search, "i"}},
+		{"location_info.city_name": bson.RegEx{search, "i"}},
+	}}).Skip((page - 1) * 5).Sort("created_at").Limit(5).All(&items)
+	if err != nil {
+		log.Println("unable to get data:", err.Error())
+	}
+	return items, err
+}
