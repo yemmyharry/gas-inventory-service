@@ -16,5 +16,8 @@ func (s *Server) Routes(router *gin.Engine) {
 	apirouter.PUT("/inventory/items/documents/:reference", s.AddDocument())
 	apirouter.PUT("/inventory/items/validate-item/:reference", s.ValidateItem())
 	apirouter.GET("/inventory/items/:reference", s.GetItemDetail())
+	apirouter.GET("/inventory/items/list/:search-text/list/page/:page", s.GetItemList())
+	apirouter.GET("/inventory/items/org/:organization-reference/:search-text/list/page/:page", s.GetItemListByOrgRef())
+	apirouter.GET("/inventory/items/orgs/:category-reference/:organization-reference/:search-text/list/page/:page", s.GetItemListByCatRefAndOrgRef())
 	router.NoRoute(func(c *gin.Context) { c.JSON(404, helper.PrintErrorMessage("404", shared.NoResourceFound)) })
 }
