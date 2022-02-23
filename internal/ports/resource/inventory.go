@@ -11,4 +11,7 @@ type Inventory interface {
 	AddDocuments(reference string, documents []resource.DocumentInformation) error
 	ValidateItem(reference string, validation resource.ValidationInformation) error
 	GetItemDetail(reference string) (*resource.Inventory, error)
+	GetItemsByMultipleSearch(search string, page int) ([]resource.Inventory, error)
+	GetItemsByOrganisationSearch(organisationReference string, search string, page int) ([]resource.Inventory, error)
+	GetItemsByCategoryAndOrganisationSearch(categoryReference string, organisationReference string, search string, page int) ([]resource.Inventory, error)
 }
