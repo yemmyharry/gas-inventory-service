@@ -11,10 +11,10 @@ import (
 
 func main() {
 	helper.InitializeLog()
-	address, port, _, _, _, _ := helper.LoadConfig()
+	address, port, _, dbHost, dbName, _ := helper.LoadConfig()
 	router := gin.New()
 	db := &repository.MongoRepository{}
-	db.Init()
+	db.Init(dbHost, dbName)
 	s := &adapter.Server{
 		Inventory: db,
 		Route:     router,
