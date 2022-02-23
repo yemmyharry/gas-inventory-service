@@ -12,12 +12,10 @@ type MongoRepository struct {
 	DbName string
 }
 
-const mongoServerURL = "mongodb://localhost:27017/gasplus"
-
 //Create a Mongo Client
-func NewMongoClient() (*mgo.Database, error) {
-	dbname := "gasplus"
-	DBSession, err := mgo.Dial(mongoServerURL)
+func NewMongoClient(dbName, dbHost string) (*mgo.Database, error) {
+	dbname := dbName
+	DBSession, err := mgo.Dial(dbHost)
 	if err != nil {
 		panic(errors.Wrap(err, "Unable to connect to Mongo database"))
 	}
@@ -28,10 +26,10 @@ func NewMongoClient() (*mgo.Database, error) {
 }
 
 //NewMongoRepository ...
-func (r *MongoRepository) Init() {
-	mongoClient, err := NewMongoClient()
+func (r *MongoRepository) Init(dbHost, dbName string) {
+	mongoClient, err := NewMongoClient(dbName, dbHost)
 	r.Client = mongoClient
-	r.DbName = "gasplus"
+	r.DbName = dbName
 	if err != nil {
 		log.Println(err.Error())
 	}
