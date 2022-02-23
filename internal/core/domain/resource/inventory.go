@@ -40,6 +40,7 @@ type DocumentInformation struct {
 
 type Inventory struct {
 	Reference             string                 `json:"reference" bson:"reference"`
+	UserReference         string                 `json:"user_reference" bson:"user_reference"`
 	OrganizationReference string                 `json:"organization_reference" bson:"organization_reference"`
 	OrganizationName      string                 `json:"organization_name" bson:"organization_name"`
 	ItemName              string                 `json:"item_name" bson:"item_name"`
