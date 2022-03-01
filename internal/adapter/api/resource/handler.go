@@ -84,6 +84,59 @@ func (s *Server) DeleteAllUserItems() gin.HandlerFunc {
 	}
 }
 
+func (s *Server) DeleteItemSoft() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		reference := c.Param(strings.TrimSpace("reference"))
+		err := s.Inventory.SoftDeleteItem(reference)
+		if err != nil {
+			c.JSON(500, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
+
+		c.JSON(200, gin.H{
+			"reference": reference,
+			"message":   "item soft deleted",
+		})
+	}
+}
+
+func (s *Server) RestoreItem() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		reference := c.Param(strings.TrimSpace("reference"))
+		err := s.Inventory.RestoreItem(reference)
+		if err != nil {
+			c.JSON(500, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
+
+		c.JSON(200, gin.H{
+			"reference": reference,
+			"message":   "item restored",
+		})
+	}
+}
+
+func (s *Server) SoftDeleteAllUserItems() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		userReference := c.Param(strings.TrimSpace("user-reference"))
+		err := s.Inventory.SoftDeleteAllUserItems(userReference)
+		if err != nil {
+			c.JSON(500, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
+
+		c.JSON(200, gin.H{
+			"message": "all items soft deleted",
+		})
+	}
+}
+
 func (s *Server) CheckItemAvailability() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		reference := c.Param(strings.TrimSpace("reference"))
@@ -98,7 +151,6 @@ func (s *Server) CheckItemAvailability() gin.HandlerFunc {
 
 		c.JSON(200, gin.H{
 			"reference": reference,
-			"message":   "item availability is " + available,
 		})
 	}
 }
