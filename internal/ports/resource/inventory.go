@@ -7,6 +7,9 @@ type Inventory interface {
 	UpdateItem(reference string, i *resource.Inventory) error
 	DeleteItem(reference string) error
 	DeleteAllUserItems(userReference string) error
+	SoftDeleteItem(reference string) error
+	RestoreItem(reference string) error
+	SoftDeleteAllUserItems(userReference string) error
 	CheckItemAvailability(reference string, available string) error
 	AddDocuments(reference string, documents []resource.DocumentInformation) error
 	ValidateItem(reference string, validation resource.ValidationInformation) error
