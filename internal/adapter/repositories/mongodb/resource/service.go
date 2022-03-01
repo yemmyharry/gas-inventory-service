@@ -17,16 +17,16 @@ func (r *MongoRepository) CreateItem(i *resource.Inventory) error {
 }
 
 func (r *MongoRepository) UpdateItem(reference string, i *resource.Inventory) error {
-	locationInformation := resource.LocationInformation{
-		LocationReference: i.LocationInfo.LocationReference,
-		Address:           i.LocationInfo.Address,
-		CountryReference:  i.LocationInfo.CountryReference,
-		CountryName:       i.LocationInfo.CountryName,
-		StateReference:    i.LocationInfo.StateReference,
-		StateName:         i.LocationInfo.StateName,
-		CityReference:     i.LocationInfo.CityReference,
-		CityName:          i.LocationInfo.CityName,
-		Location:          i.LocationInfo.Location,
+
+	organisationInformation := resource.OrganisationInformation{
+		OrganisationReference: i.OrganizationInfo.OrganisationReference,
+		Industry:              i.OrganizationInfo.Industry,
+		OrganisationName:      i.OrganizationInfo.OrganisationName,
+		Address:               i.OrganizationInfo.Address,
+		State:                 i.OrganizationInfo.State,
+		Position:              i.OrganizationInfo.Position,
+		RCNumber:              i.OrganizationInfo.RCNumber,
+		Location:              i.OrganizationInfo.Location,
 	}
 
 	categoryInformation := resource.CategoryInformation{
@@ -43,14 +43,14 @@ func (r *MongoRepository) UpdateItem(reference string, i *resource.Inventory) er
 		"item_name":         i.ItemName,
 		"description":       i.Description,
 		"unit":              i.Unit,
-		"location_info":     locationInformation,
-		"publish_location":  false,
+		"organization_info": organisationInformation,
 		"category_info":     categoryInformation,
 		"sub_category_info": subCategoryInformation,
-		"sponsored":         false,
-		"available":         false,
+		"sponsored":         i.Sponsored,
+		"available":         i.Available,
 		"updated_at":        time.Now(),
 	}})
+
 	if err != nil {
 		log.Println("unable to update data:", err.Error())
 	}
@@ -70,6 +70,45 @@ func (r *MongoRepository) DeleteAllUserItems(userReference string) error {
 	err := r.Client.C("items").Remove(bson.M{"user_reference": userReference})
 	if err != nil {
 		log.Println("unable to delete data:", err.Error())
+	}
+	return err
+}
+
+func (r *MongoRepository) SoftDeleteItem(reference string) error {
+	err := r.Client.C("items").Update(bson.M{"reference": reference}, bson.M{"$set": bson.M{
+		"is_deleted": true,
+		"updated_at": time.Now(),
+		"deleted_at": time.Now(),
+	}})
+
+	if err != nil {
+		log.Println("unable to soft delete data:", err.Error())
+	}
+	return err
+}
+
+func (r *MongoRepository) RestoreItem(reference string) error {
+	err := r.Client.C("items").Update(bson.M{"reference": reference}, bson.M{"$set": bson.M{
+		"is_deleted": false,
+		"updated_at": time.Now(),
+		"deleted_at": "",
+	}})
+
+	if err != nil {
+		log.Println("unable to restore data:", err.Error())
+	}
+	return err
+}
+
+func (r *MongoRepository) SoftDeleteAllUserItems(userReference string) error {
+	err := r.Client.C("items").Update(bson.M{"user_reference": userReference}, bson.M{"$set": bson.M{
+		"is_deleted": true,
+		"updated_at": time.Now(),
+		"deleted_at": time.Now(),
+	}})
+
+	if err != nil {
+		log.Println("unable to soft delete data:", err.Error())
 	}
 	return err
 }
