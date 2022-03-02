@@ -252,3 +252,19 @@ func (s *Server) GetItemListByCatRefAndOrgRef() gin.HandlerFunc {
 		c.JSON(200, i)
 	}
 }
+
+func (s *Server) GetItemListByCityReference() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		search_text := c.Param(strings.TrimSpace("search-text"))
+		cityRef := c.Param(strings.TrimSpace("state-reference"))
+		page, _ := strconv.Atoi(c.Param(strings.TrimSpace("page")))
+		i, err := s.Inventory.GetItemsByStateSearch(cityRef, search_text, page)
+		if err != nil {
+			c.JSON(500, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
+		c.JSON(200, i)
+	}
+}
