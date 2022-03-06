@@ -199,10 +199,26 @@ func (r *MongoRepository) GetItemsByCategoryAndOrganisationSearch(categoryRefere
 	return items, err
 }
 
-//get item by state reference
 func (r *MongoRepository) GetItemsByStateSearch(stateReference string, search string, page int) ([]resource.Inventory, error) {
 	var items []resource.Inventory
-	err := r.Client.C("items").Find(bson.M{"organization_info.state": stateReference, "$or": []bson.M{
+	err := r.Client.C("items").Find(bson.M{"organization_info.state_reference": stateReference, "$or": []bson.M{
+		{"item_name": bson.RegEx{search, "i"}},
+		{"description": bson.RegEx{search, "i"}},
+		{"category_info.category_name": bson.RegEx{search, "i"}},
+		{"sub_category_info.sub_category_name": bson.RegEx{search, "i"}},
+		{"organization_info.organization_name": bson.RegEx{search, "i"}},
+		{"organization_info.state": bson.RegEx{search, "i"}},
+		{"organization_info.rc_number": bson.RegEx{search, "i"}},
+	}}).Skip((page - 1) * 5).Sort("created_at").Limit(5).All(&items)
+	if err != nil {
+		log.Println("unable to get data:", err.Error())
+	}
+	return items, err
+}
+
+func (r *MongoRepository) GetItemsByCategoryAndStateSearch(categoryReference string, stateReference string, search string, page int) ([]resource.Inventory, error) {
+	var items []resource.Inventory
+	err := r.Client.C("items").Find(bson.M{"category_info.category_reference": categoryReference, "organization_info.state_reference": stateReference, "$or": []bson.M{
 		{"item_name": bson.RegEx{search, "i"}},
 		{"description": bson.RegEx{search, "i"}},
 		{"category_info.category_name": bson.RegEx{search, "i"}},
