@@ -7,23 +7,12 @@ type OrganisationInformation struct {
 	Industry              string `json:"industry" bson:"industry"`
 	OrganisationName      string `json:"organization_name" bson:"organization_name"`
 	Address               string `json:"address" bson:"address"`
+	StateReference        string `json:"state_reference" bson:"state_reference"`
 	State                 string `json:"state" bson:"state"`
 	Position              string `json:"position" bson:"position"`
 	RCNumber              string `json:"rc_number" bson:"rc_number"`
 	Location              string `json:"location" bson:"location"`
 }
-
-//type LocationInformation struct {
-//	LocationReference string `json:"location_reference" bson:"location_reference"`
-//	Address           string `json:"address" bson:"address"`
-//	CountryReference  string `json:"country_reference" bson:"country_reference"`
-//	CountryName       string `json:"country_name" bson:"country_name"`
-//	StateReference    string `json:"state_reference" bson:"state_reference"`
-//	StateName         string `json:"state_name" bson:"state_name"`
-//	CityReference     string `json:"city_reference" bson:"city_reference"`
-//	CityName          string `json:"city_name" bson:"city_name"`
-//	Location          string `json:"location" bson:"location"`
-//}
 
 type CategoryInformation struct {
 	CategoryReference string `json:"category_reference" bson:"category_reference"`
