@@ -18,4 +18,5 @@ type Inventory interface {
 	GetItemsByOrganisationSearch(organisationReference string, search string, page int) ([]resource.Inventory, error)
 	GetItemsByCategoryAndOrganisationSearch(categoryReference string, organisationReference string, search string, page int) ([]resource.Inventory, error)
 	GetItemsByStateSearch(stateReference string, search string, page int) ([]resource.Inventory, error)
+	GetItemsByCategoryAndStateSearch(categoryReference string, stateReference string, search string, page int) ([]resource.Inventory, error)
 }
