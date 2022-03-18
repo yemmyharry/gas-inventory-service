@@ -1,8 +1,8 @@
 package resource
 
 import (
+	"gas-inventory-service/internal/core/domain/resource"
 	"github.com/globalsign/mgo/bson"
-	"github.com/yemmyharry/gas-inventory-service/internal/core/domain/resource"
 	"log"
 	"strconv"
 	"time"

@@ -1,9 +1,9 @@
 package resource
 
 import (
+	"gas-inventory-service/internal/core/domain/resource"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
-	"github.com/yemmyharry/gas-inventory-service/internal/core/domain/resource"
 	"strconv"
 	"strings"
 	"time"

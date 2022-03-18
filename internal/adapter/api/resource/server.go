@@ -1,8 +1,8 @@
 package resource
 
 import (
+	ports "gas-inventory-service/internal/ports/resource"
 	"github.com/gin-gonic/gin"
-	ports "github.com/yemmyharry/gas-inventory-service/internal/ports/resource"
 )
 
 type Server struct {

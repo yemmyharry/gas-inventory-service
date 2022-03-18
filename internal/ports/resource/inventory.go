@@ -1,6 +1,6 @@
 package ports
 
-import "github.com/yemmyharry/gas-inventory-service/internal/core/domain/resource"
+import "gas-inventory-service/internal/core/domain/resource"
 
 type Inventory interface {
 	CreateItem(i *resource.Inventory) error

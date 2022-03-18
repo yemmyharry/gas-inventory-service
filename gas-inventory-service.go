@@ -2,10 +2,10 @@ package main
 
 import (
 	"fmt"
+	adapter "gas-inventory-service/internal/adapter/api/resource"
+	repository "gas-inventory-service/internal/adapter/repositories/mongodb/resource"
+	"gas-inventory-service/internal/core/helper"
 	"github.com/gin-gonic/gin"
-	adapter "github.com/yemmyharry/gas-inventory-service/internal/adapter/api/resource"
-	repository "github.com/yemmyharry/gas-inventory-service/internal/adapter/repositories/mongodb/resource"
-	"github.com/yemmyharry/gas-inventory-service/internal/core/helper"
 	"time"
 )
 

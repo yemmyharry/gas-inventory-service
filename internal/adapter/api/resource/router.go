@@ -1,9 +1,9 @@
 package resource
 
 import (
+	"gas-inventory-service/internal/core/helper"
+	"gas-inventory-service/internal/core/shared"
 	"github.com/gin-gonic/gin"
-	"github.com/yemmyharry/gas-inventory-service/internal/core/helper"
-	"github.com/yemmyharry/gas-inventory-service/internal/core/shared"
 )
 
 func (s *Server) Routes(router *gin.Engine) {
