@@ -9,14 +9,14 @@ import (
 	"time"
 )
 
-func (s *Server) CreateItem() gin.HandlerFunc {
+func (s *HTTPHandler) CreateItem() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		i := &resource.Inventory{}
 		c.ShouldBindJSON(i)
 		reference := uuid.New().String()
 		i.Reference = reference
 		i.CreatedAt = time.Now()
-		err := s.Inventory.CreateItem(i)
+		err := s.InventoryService.CreateItem(i)
 		if err != nil {
 			c.JSON(500, gin.H{
 				"error": err.Error(),
@@ -30,12 +30,12 @@ func (s *Server) CreateItem() gin.HandlerFunc {
 	}
 }
 
-func (s *Server) UpdateItem() gin.HandlerFunc {
+func (s *HTTPHandler) UpdateItem() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		i := &resource.Inventory{}
 		c.ShouldBindJSON(i)
 		reference := c.Param(strings.TrimSpace("reference"))
-		err := s.Inventory.UpdateItem(reference, i)
+		err := s.InventoryService.UpdateItem(reference, i)
 		if err != nil {
 			c.JSON(500, gin.H{
 				"error": err.Error(),
@@ -49,10 +49,10 @@ func (s *Server) UpdateItem() gin.HandlerFunc {
 	}
 }
 
-func (s *Server) DeleteItem() gin.HandlerFunc {
+func (s *HTTPHandler) DeleteItem() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		reference := c.Param(strings.TrimSpace("reference"))
-		err := s.Inventory.DeleteItem(reference)
+		err := s.InventoryService.DeleteItem(reference)
 		if err != nil {
 			c.JSON(500, gin.H{
 				"error": err.Error(),
@@ -67,10 +67,10 @@ func (s *Server) DeleteItem() gin.HandlerFunc {
 	}
 }
 
-func (s *Server) DeleteAllUserItems() gin.HandlerFunc {
+func (s *HTTPHandler) DeleteAllUserItems() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		userReference := c.Param(strings.TrimSpace("user_reference"))
-		err := s.Inventory.DeleteAllUserItems(userReference)
+		err := s.InventoryService.DeleteAllUserItems(userReference)
 		if err != nil {
 			c.JSON(500, gin.H{
 				"error": err.Error(),
@@ -84,10 +84,10 @@ func (s *Server) DeleteAllUserItems() gin.HandlerFunc {
 	}
 }
 
-func (s *Server) DeleteItemSoft() gin.HandlerFunc {
+func (s *HTTPHandler) DeleteItemSoft() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		reference := c.Param(strings.TrimSpace("reference"))
-		err := s.Inventory.SoftDeleteItem(reference)
+		err := s.InventoryService.SoftDeleteItem(reference)
 		if err != nil {
 			c.JSON(500, gin.H{
 				"error": err.Error(),
@@ -102,10 +102,10 @@ func (s *Server) DeleteItemSoft() gin.HandlerFunc {
 	}
 }
 
-func (s *Server) RestoreItem() gin.HandlerFunc {
+func (s *HTTPHandler) RestoreItem() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		reference := c.Param(strings.TrimSpace("reference"))
-		err := s.Inventory.RestoreItem(reference)
+		err := s.InventoryService.RestoreItem(reference)
 		if err != nil {
 			c.JSON(500, gin.H{
 				"error": err.Error(),
@@ -120,10 +120,10 @@ func (s *Server) RestoreItem() gin.HandlerFunc {
 	}
 }
 
-func (s *Server) SoftDeleteAllUserItems() gin.HandlerFunc {
+func (s *HTTPHandler) SoftDeleteAllUserItems() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		userReference := c.Param(strings.TrimSpace("user-reference"))
-		err := s.Inventory.SoftDeleteAllUserItems(userReference)
+		err := s.InventoryService.SoftDeleteAllUserItems(userReference)
 		if err != nil {
 			c.JSON(500, gin.H{
 				"error": err.Error(),
@@ -137,11 +137,11 @@ func (s *Server) SoftDeleteAllUserItems() gin.HandlerFunc {
 	}
 }
 
-func (s *Server) CheckItemAvailability() gin.HandlerFunc {
+func (s *HTTPHandler) CheckItemAvailability() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		reference := c.Param(strings.TrimSpace("reference"))
 		available := c.Param(strings.TrimSpace("available"))
-		err := s.Inventory.CheckItemAvailability(reference, available)
+		err := s.InventoryService.CheckItemAvailability(reference, available)
 		if err != nil {
 			c.JSON(500, gin.H{
 				"error": err.Error(),
@@ -155,12 +155,12 @@ func (s *Server) CheckItemAvailability() gin.HandlerFunc {
 	}
 }
 
-func (s *Server) AddDocument() gin.HandlerFunc {
+func (s *HTTPHandler) AddDocument() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		i := &resource.Inventory{}
 		c.ShouldBindJSON(i)
 		reference := c.Param(strings.TrimSpace("reference"))
-		err := s.Inventory.AddDocuments(reference, i.DocumentInfo)
+		err := s.InventoryService.AddDocuments(reference, i.DocumentInfo)
 		if err != nil {
 			c.JSON(500, gin.H{
 				"error": err.Error(),
@@ -173,12 +173,12 @@ func (s *Server) AddDocument() gin.HandlerFunc {
 	}
 }
 
-func (s *Server) ValidateItem() gin.HandlerFunc {
+func (s *HTTPHandler) ValidateItem() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		i := &resource.Inventory{}
 		c.ShouldBindJSON(i)
 		reference := c.Param(strings.TrimSpace("reference"))
-		err := s.Inventory.ValidateItem(reference, i.ValidationInfo)
+		err := s.InventoryService.ValidateItem(reference, i.ValidationInfo)
 		if err != nil {
 			c.JSON(500, gin.H{
 				"error": err.Error(),
@@ -191,10 +191,10 @@ func (s *Server) ValidateItem() gin.HandlerFunc {
 	}
 }
 
-func (s *Server) GetItemDetail() gin.HandlerFunc {
+func (s *HTTPHandler) GetItemDetail() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		reference := c.Param(strings.TrimSpace("reference"))
-		i, err := s.Inventory.GetItemDetail(reference)
+		i, err := s.InventoryService.GetItemDetail(reference)
 		if err != nil {
 			c.JSON(500, gin.H{
 				"error": err.Error(),
@@ -205,11 +205,11 @@ func (s *Server) GetItemDetail() gin.HandlerFunc {
 	}
 }
 
-func (s *Server) GetItemList() gin.HandlerFunc {
+func (s *HTTPHandler) GetItemList() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		search_text := c.Param(strings.TrimSpace("search-text"))
 		page, _ := strconv.Atoi(c.Param(strings.TrimSpace("page")))
-		i, err := s.Inventory.GetItemsByMultipleSearch(search_text, page)
+		i, err := s.InventoryService.GetItemsByMultipleSearch(search_text, page)
 		if err != nil {
 			c.JSON(500, gin.H{
 				"error": err.Error(),
@@ -220,12 +220,12 @@ func (s *Server) GetItemList() gin.HandlerFunc {
 	}
 }
 
-func (s *Server) GetItemListByOrgRef() gin.HandlerFunc {
+func (s *HTTPHandler) GetItemListByOrgRef() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		search_text := c.Param(strings.TrimSpace("search-text"))
 		orgRef := c.Param(strings.TrimSpace("organization-reference"))
 		page, _ := strconv.Atoi(c.Param(strings.TrimSpace("page")))
-		i, err := s.Inventory.GetItemsByOrganisationSearch(orgRef, search_text, page)
+		i, err := s.InventoryService.GetItemsByOrganisationSearch(orgRef, search_text, page)
 		if err != nil {
 			c.JSON(500, gin.H{
 				"error": err.Error(),
@@ -236,13 +236,13 @@ func (s *Server) GetItemListByOrgRef() gin.HandlerFunc {
 	}
 }
 
-func (s *Server) GetItemListByCatRefAndOrgRef() gin.HandlerFunc {
+func (s *HTTPHandler) GetItemListByCatRefAndOrgRef() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		searchText := c.Param(strings.TrimSpace("search-text"))
 		orgRef := c.Param(strings.TrimSpace("organization-reference"))
 		catRef := c.Param(strings.TrimSpace("category-reference"))
 		page, _ := strconv.Atoi(c.Param(strings.TrimSpace("page")))
-		i, err := s.Inventory.GetItemsByCategoryAndOrganisationSearch(catRef, orgRef, searchText, page)
+		i, err := s.InventoryService.GetItemsByCategoryAndOrganisationSearch(catRef, orgRef, searchText, page)
 		if err != nil {
 			c.JSON(500, gin.H{
 				"error": err.Error(),
@@ -253,12 +253,12 @@ func (s *Server) GetItemListByCatRefAndOrgRef() gin.HandlerFunc {
 	}
 }
 
-func (s *Server) GetItemListByCityReference() gin.HandlerFunc {
+func (s *HTTPHandler) GetItemListByCityReference() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		search_text := c.Param(strings.TrimSpace("search-text"))
 		cityRef := c.Param(strings.TrimSpace("state-reference"))
 		page, _ := strconv.Atoi(c.Param(strings.TrimSpace("page")))
-		i, err := s.Inventory.GetItemsByStateSearch(cityRef, search_text, page)
+		i, err := s.InventoryService.GetItemsByStateSearch(cityRef, search_text, page)
 		if err != nil {
 			c.JSON(500, gin.H{
 				"error": err.Error(),
@@ -269,13 +269,13 @@ func (s *Server) GetItemListByCityReference() gin.HandlerFunc {
 	}
 }
 
-func (s *Server) GetItemListByCatRefAndCityRef() gin.HandlerFunc {
+func (s *HTTPHandler) GetItemListByCatRefAndCityRef() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		searchText := c.Param(strings.TrimSpace("search-text"))
 		cityRef := c.Param(strings.TrimSpace("state-reference"))
 		catRef := c.Param(strings.TrimSpace("category-reference"))
 		page, _ := strconv.Atoi(c.Param(strings.TrimSpace("page")))
-		i, err := s.Inventory.GetItemsByCategoryAndStateSearch(catRef, cityRef, searchText, page)
+		i, err := s.InventoryService.GetItemsByCategoryAndStateSearch(catRef, cityRef, searchText, page)
 		if err != nil {
 			c.JSON(500, gin.H{
 				"error": err.Error(),

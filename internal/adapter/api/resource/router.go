@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (s *Server) Routes(router *gin.Engine) {
+func (s *HTTPHandler) Routes(router *gin.Engine) {
 	apirouter := router.Group("api")
 	apirouter.POST("/inventory/items", s.CreateItem())
 	apirouter.PUT("/inventory/items/:reference", s.UpdateItem())

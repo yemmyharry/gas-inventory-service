@@ -2,7 +2,7 @@ package ports
 
 import "gas-inventory-service/internal/core/domain/resource"
 
-type Inventory interface {
+type InventoryService interface {
 	CreateItem(i *resource.Inventory) error
 	UpdateItem(reference string, i *resource.Inventory) error
 	DeleteItem(reference string) error
